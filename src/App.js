@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import "./App.css";
 
 import Form from "./components/Form";
+import Recipes from "./components/Recipes";
 
-const API_KEY = "f3ac2c8e0362675ac11bdc659df47812";
+const API_KEY = "a33eecc6ecb34ee43339303790d7a74a";
 
 class App extends Component {
   state = {
-    recipe: []
+    recipes: []
   };
 
   getRecipe = async e => {
@@ -19,10 +20,20 @@ class App extends Component {
     const data = await response.json();
 
     this.setState({
-      recipe: data.recipes
+      recipes: data.recipes
     });
 
-    console.log(this.state.recipe);
+    console.log(this.state.recipes);
+  };
+
+  componentDidMount = () => {
+    const json = localStorage.getItem("recipes");
+    const recipes = JSON.parse(json);
+    this.setState({ recipes });
+  };
+  componentDidUpdate = () => {
+    const recipes = JSON.stringify(this.state.recipes);
+    localStorage.setItem("recipes", recipes);
   };
 
   render() {
@@ -32,6 +43,7 @@ class App extends Component {
           <h1 className="App-title">Welcome to Recipe Search</h1>
         </header>
         <Form getRecipe={this.getRecipe} />
+        <Recipes recipes={this.state.recipes} />
       </div>
     );
   }
